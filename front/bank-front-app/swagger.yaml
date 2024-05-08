@@ -101,14 +101,23 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  /user/account:
-    post: 
+  /user/account/{accountId}:
+    get: 
       tags:
         - Accounts and Transactions Module
-      summary: All accounts
-      description: API for retrieving all user account
-      security:
-        - Bearer: []
+      summary: User's Accounts
+      description: API for retrieving user all accounts
+      parameters:
+      - in: header
+        name: Authorization
+        description: Attach Bearer JWT token
+        type: string
+        required: true
+      - in: path
+        name: accountId
+        description: User's account ID
+        type: integer
+        required: true
       responses: 
         '200':
           description: All accounts retrieved successfully
@@ -116,23 +125,42 @@ paths:
             type: array
             items:
               $ref: '#/definitions/AccountResponse'
+        '400':
+          description: Bad request      
         '401':
           description: Unauthorized user
+        '404':
+          description: Not found account 
         '500':
           description: Internal Server Error
   /account/{accountID}/transactions:
-    post:
+    get:
       tags:
         - Accounts and Transactions Module
       summary: Account transactions
-      description: API for retrieving list of transactions assiocated with an account
-      security: 
-        - Bearer: []
+      description: API for retrieving list of transactions associated with an account
+      produces: 
+        - application/json
       parameters:
-        - in: path
-          name: accountID
-          description: ID of an account
+        - name: Authorization
+          in: header
+          description: Attach Bearer JWT token
           required: true
+          type: string
+        - name: accountId
+          in: path
+          description: account ID
+          required: true
+          type: integer
+        - name: fromDate
+          in: query
+          description: Start date for fetching transactions
+          required: false
+          type: string
+        - name: toDate
+          in: query
+          description: End date for fetching transactions
+          required: false
           type: string
       responses:
         '200':
@@ -141,6 +169,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TransactionsResponse'
+        '400':
+          description: Bad request      
         '401':
           description: Unauthorized user
         '404': 
@@ -172,6 +202,8 @@ paths:
           description: Transaction's category modified successfully
           schema: 
             $ref: '#/definitions/TransactionCategory'
+        '400':
+          description: Bad request    
         '401': 
           description: Unauthorized user
         '404': 
@@ -199,10 +231,12 @@ paths:
           schema: 
             $ref: '#/definitions/TransactionNote'
       responses:
-        '200':
+        '201':
           description: Note added to the transaction successfully
           schema: 
             $ref: '#/definitions/TransactionResponseNote'
+        '400':
+          description: Bad request   
         '401':
           description: Unauthorized user
         '404':
@@ -239,6 +273,8 @@ paths:
           description: Note modified successfully
           schema:
             $ref: '#/definitions/TransactionResponseNote'
+        '400':
+          description: Bad request    
         '401':
           description: Unauthorized user
         '404':
@@ -264,8 +300,10 @@ paths:
           required: true
           type: string
       responses:
-        '200':
+        '200': 
           description: Note deleted successfully
+        '204':
+          description: No Content  
         '401':
           description: Unauthorized user
         '404':
