@@ -133,7 +133,7 @@ paths:
           description: Not found account 
         '500':
           description: Internal Server Error
-  /account/{accountID}/transactions:
+  /account/{accountId}/transactions:
     get:
       tags:
         - Accounts and Transactions Module
@@ -300,8 +300,6 @@ paths:
           required: true
           type: string
       responses:
-        '200': 
-          description: Note deleted successfully
         '204':
           description: No Content  
         '401':
