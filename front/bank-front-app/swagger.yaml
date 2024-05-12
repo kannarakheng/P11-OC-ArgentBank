@@ -301,7 +301,7 @@ paths:
           type: string
       responses:
         '204':
-          description: No Content  
+          description: No Content/Note deleted  
         '401':
           description: Unauthorized user
         '404':
